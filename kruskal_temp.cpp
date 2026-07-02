@@ -1,13 +1,13 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<int> parent;
-
 class Edge
 {
 public:
     int u,v,w;
 };
+
+vector<int> parent;
 
 int find(int u)
 {
@@ -31,11 +31,13 @@ int main()
     int n,m;
     cin>>n>>m;
 
-    vector<Edge> e(m);
+    vector<Edge> edges;
 
     for(int i=0;i<m;i++)
     {
-        cin>>e[i].u>>e[i].v>>e[i].w;
+        Edge e;
+        cin>>e.u>>e.v>>e.w;
+        edges.push_back(e);
     }
 
     parent.resize(n+1);
@@ -43,22 +45,29 @@ int main()
     for(int i=1;i<=n;i++)
         parent[i]=i;
 
-    sort(e.begin(),e.end(),[](Edge a,Edge b)
+    sort(edges.begin(),edges.end(),[](Edge a,Edge b)
     {
         return a.w<b.w;
     });
 
     int cost=0;
+    int taken=0;
 
     vector<Edge> mst;
 
-    for(auto ed:e)
+    for(auto e:edges)
     {
-        if(find(ed.u)!=find(ed.v))
+        if(find(e.u)!=find(e.v))
         {
-            mst.push_back(ed);
-            unite(ed.u,ed.v);
+            cost+=e.w;
+            taken++;
+
+            mst.push_back(e);
+
+            unite(e.u,e.v);
+
+            if(taken==n-1)
+                break;
         }
     }
-
 }
